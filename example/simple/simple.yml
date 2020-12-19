@@ -5,6 +5,6 @@ metadata:
   annotations:
     config.kubernetes.io/function: |
       exec:
-        path: ../dist/rnd-fn
+        path: ../../dist/rnd-fn
 data:
   value: foo
