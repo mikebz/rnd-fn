@@ -15,16 +15,14 @@
 
 all: fix fmt test build tidy
 
-
 build:
-	go build -o ./build/rnd-fn -v .
+	go build -o ./dist/rnd-fn -v .
 
 fix:
 	go fix ./...
 
 fmt:
 	go fmt ./...
-
 
 test:
 	go test -cover ./...
