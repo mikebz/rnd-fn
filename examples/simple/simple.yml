@@ -2,9 +2,10 @@ apiVersion: example.com/v1alpha1
 kind: ConfigMap
 metadata:
   name: foo
+  namespace: unique-ns
   annotations:
     config.kubernetes.io/function: |
       exec:
         path: ../../dist/rnd-fn
 data:
-  value: foo
+  fieldprefix: unique-ns
