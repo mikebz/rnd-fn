@@ -3,9 +3,8 @@ kind: ConfigMap
 metadata:
   name: my-config
   annotations:
-    config.k8s.io/function: |
-      container:
-        image: gcr.io/kpt-functions/set-namespace
-    config.kubernetes.io/local-config: 'true'
+    config.kubernetes.io/function: |
+      exec:
+        path: ../../../dist/rnd-fn
 data:
-  fieldprefix: "unique-ns"
+  fieldprefix: unique-ns
