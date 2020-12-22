@@ -32,8 +32,8 @@ func (p *plugin) Transform(m resmap.ResMap) error {
 		}
 
 		filter := prefixsuffix.Filter{
-			Suffix:    "-" + randomNumber(), // TODO: add random
-			FieldSpec: p.FieldSpecs[0],      // TODO: create a filter with multiple fieldspecs
+			Suffix:    "-" + rgInstance.suffix(),
+			FieldSpec: p.FieldSpecs[0], // TODO: create a filter with multiple fieldspecs
 		}
 
 		err := filtersutil.ApplyToJSON(filter, r)

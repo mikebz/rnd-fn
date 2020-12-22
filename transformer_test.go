@@ -5,8 +5,21 @@ import (
 	"testing"
 )
 
+type randomMock struct{}
+
+func (rg randomMock) suffix() string {
+	return "1231231"
+}
+
+func (rg randomMock) value(prefix string) string {
+	return fmt.Sprintf("%s-%s", prefix, rg.suffix())
+}
+
 // test setup function that creates the transformer and resmap
 func runNamespaceTransformerE(config, input string) (string, error) {
+
+	rgInstance = randomMock{}
+
 	resmapFactory := newResMapFactory()
 	resMap, err := resmapFactory.NewResMapFromBytes([]byte(input))
 	if err != nil {
@@ -59,10 +72,9 @@ metadata:
   namespace: unique-ns
 spec:
   clusterIP: None
-  publishNotReadyAddresses: true
   ports:
   - port: 2380
-    name: etcd-server-ssl
+  publishNotReadyAddresses: true
 `
 
 	expected := `apiVersion: v1
@@ -72,16 +84,15 @@ metadata:
   namespace: unique-ns-1231231
 spec:
   clusterIP: None
-  publishNotReadyAddresses: true
   ports:
   - port: 2380
-    name: etcd-server-ssl
+  publishNotReadyAddresses: true
 `
 
-	output := runNamespaceTransformer(t, config, input)
-	if output != expected {
+	actual := runNamespaceTransformer(t, config, input)
+	if actual != expected {
 		fmt.Println("Actual:")
-		fmt.Println(output)
+		fmt.Println(actual)
 		fmt.Println("===")
 		fmt.Println("Expected:")
 		fmt.Println(expected)
