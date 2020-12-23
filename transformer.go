@@ -18,7 +18,7 @@ type transformer struct {
 // GlobalPlugin used in other parts of the module
 var GlobalPlugin transformer
 
-func (tr *transformer) Config(_ *resmap.PluginHelpers, c []byte) (err error) {
+func (tr *transformer) Config(_ *resmap.PluginHelpers, c []byte) error {
 	tr.FieldPrefix = ""
 	tr.FieldSpecs = nil
 	return yaml.Unmarshal(c, tr)
