@@ -21,18 +21,18 @@ import (
 	"sigs.k8s.io/kustomize/api/k8sdeps/kunstruct"
 	"sigs.k8s.io/kustomize/api/resmap"
 	"sigs.k8s.io/kustomize/api/resource"
-	"sigs.k8s.io/kustomize/api/types"
 	"sigs.k8s.io/kustomize/kyaml/fn/framework"
 	"sigs.k8s.io/kustomize/kyaml/yaml"
 )
 
 // constants
-const defaultConfigString = `- path: metadata/namespace
-  randomprefix: rnd
-  create: true`
+const defaultConfigString = `fieldprefix: rnd
+fieldSpecs:
+  - path: metadata/namespace
+    create: true`
 
 func main() {
-	var plugin *plugin = &GlobalPlugin
+	var tr *transformer = &GlobalPlugin
 	defaultConfig, err := getDefaultConfig()
 	if err != nil {
 		log.Fatal(err)
@@ -57,14 +57,21 @@ func main() {
 			return errors.Wrap(err, "error when marshal data values")
 		}
 
-		err = plugin.Config(pluginHelpers, dataValue)
+		err = tr.Config(pluginHelpers, dataValue)
 		if err != nil {
 			return errors.Wrap(err, "failed to config plugin")
 		}
-		if len(plugin.FieldSpecs) == 0 {
-			plugin.FieldSpecs = defaultConfig
+
+		// if we aer missing some elements of config let's
+		// get the defaults
+		if len(tr.FieldPrefix) == 0 {
+			tr.FieldPrefix = defaultConfig.FieldPrefix
 		}
-		err = plugin.Transform(resMap)
+		if len(tr.FieldSpecs) == 0 {
+			tr.FieldSpecs = defaultConfig.FieldSpecs
+		}
+
+		err = tr.Transform(resMap)
 		if err != nil {
 			return errors.Wrap(err, "failed to run transformer")
 		}
@@ -82,8 +89,8 @@ func main() {
 	}
 }
 
-func getDefaultConfig() ([]types.FieldSpec, error) {
-	var defaultConfig []types.FieldSpec
+func getDefaultConfig() (transformer, error) {
+	var defaultConfig transformer
 	err := yaml.Unmarshal([]byte(defaultConfigString), &defaultConfig)
 	return defaultConfig, err
 }

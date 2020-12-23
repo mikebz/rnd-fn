@@ -10,21 +10,21 @@ import (
 
 // configuration of the random field generator
 // the random prefix is something that will guide the name generation
-type plugin struct {
+type transformer struct {
 	FieldPrefix string            `json:"fieldprefix,omitempty" yaml:"fieldprefix,omitempty"`
 	FieldSpecs  []types.FieldSpec `json:"fieldSpecs,omitempty" yaml:"fieldSpecs,omitempty"`
 }
 
 // GlobalPlugin used in other parts of the module
-var GlobalPlugin plugin
+var GlobalPlugin transformer
 
-func (p *plugin) Config(_ *resmap.PluginHelpers, c []byte) (err error) {
-	p.FieldPrefix = ""
-	p.FieldSpecs = nil
-	return yaml.Unmarshal(c, p)
+func (tr *transformer) Config(_ *resmap.PluginHelpers, c []byte) (err error) {
+	tr.FieldPrefix = ""
+	tr.FieldSpecs = nil
+	return yaml.Unmarshal(c, tr)
 }
 
-func (p *plugin) Transform(m resmap.ResMap) error {
+func (tr *transformer) Transform(m resmap.ResMap) error {
 	for _, r := range m.Resources() {
 		if r.IsEmpty() {
 			// Don't mutate empty objects?
@@ -33,7 +33,7 @@ func (p *plugin) Transform(m resmap.ResMap) error {
 
 		filter := prefixsuffix.Filter{
 			Suffix:    "-" + rgInstance.suffix(),
-			FieldSpec: p.FieldSpecs[0], // TODO: create a filter with multiple fieldspecs
+			FieldSpec: tr.FieldSpecs[0], // TODO: create a filter with multiple fieldspecs
 		}
 
 		err := filtersutil.ApplyToJSON(filter, r)

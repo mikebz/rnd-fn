@@ -26,19 +26,12 @@ func runNamespaceTransformerE(config, input string) (string, error) {
 		return "", err
 	}
 
-	var plugin *plugin = &GlobalPlugin
-	err = plugin.Config(nil, []byte(config))
+	var testTr *transformer = &GlobalPlugin
+	err = testTr.Config(nil, []byte(config))
 	if err != nil {
 		return "", err
 	}
-	defaultConfig, err := getDefaultConfig()
-	if err != nil {
-		return "", err
-	}
-	if len(plugin.FieldSpecs) == 0 {
-		plugin.FieldSpecs = defaultConfig
-	}
-	err = plugin.Transform(resMap)
+	err = testTr.Transform(resMap)
 	if err != nil {
 		return "", err
 	}
