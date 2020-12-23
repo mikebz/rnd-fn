@@ -92,3 +92,47 @@ spec:
 		t.Fatalf("Actual doesn't equal to expected")
 	}
 }
+
+func TestSimpleLabel(t *testing.T) {
+	config := `
+fieldprefix: test
+fieldSpecs:
+- path: metadata/label
+`
+
+	input := `apiVersion: v1
+kind: Service
+metadata:
+  label: test
+  name: the-service
+  namespace: my-ns
+spec:
+  clusterIP: None
+  ports:
+  - port: 2380
+  publishNotReadyAddresses: true
+`
+
+	expected := `apiVersion: v1
+kind: Service
+metadata:
+  label: test-1231231
+  name: the-service
+  namespace: my-ns
+spec:
+  clusterIP: None
+  ports:
+  - port: 2380
+  publishNotReadyAddresses: true
+`
+
+	actual := runNamespaceTransformer(t, config, input)
+	if actual != expected {
+		fmt.Println("Actual:")
+		fmt.Println(actual)
+		fmt.Println("===")
+		fmt.Println("Expected:")
+		fmt.Println(expected)
+		t.Fatalf("Actual doesn't equal to expected")
+	}
+}
