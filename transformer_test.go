@@ -53,7 +53,7 @@ func runNamespaceTransformer(t *testing.T, config, input string) string {
 
 func TestSimpleNamespace(t *testing.T) {
 	config := `
-fieldprefix: test
+fieldprefix: unique-ns
 fieldSpecs:
 - path: metadata/namespace
 `

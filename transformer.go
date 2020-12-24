@@ -1,7 +1,6 @@
 package main
 
 import (
-	"sigs.k8s.io/kustomize/api/filters/prefixsuffix"
 	"sigs.k8s.io/kustomize/api/resmap"
 	"sigs.k8s.io/kustomize/api/types"
 	"sigs.k8s.io/kustomize/kyaml/filtersutil"
@@ -31,9 +30,10 @@ func (tr *transformer) Transform(m resmap.ResMap) error {
 			continue
 		}
 
-		filter := prefixsuffix.Filter{
-			Suffix:    "-" + rgInstance.suffix(),
-			FieldSpec: tr.FieldSpecs[0], // TODO: create a filter with multiple fieldspecs
+		filter := Filter{
+			FieldPrefix: tr.FieldPrefix,
+			Suffix:      rgInstance.suffix(),
+			FieldSpecs:  tr.FieldSpecs,
 		}
 
 		err := filtersutil.ApplyToJSON(filter, r)
