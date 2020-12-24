@@ -22,7 +22,7 @@ func TestSimpleConfig(t *testing.T) {
 
 // test that verifies that multipel field specs
 // are parsed in to multiple FieldSpec objects
-func TestMultipleSpecs(t *testing.T) {
+func TestMultipleSpecValues(t *testing.T) {
 
 	config := `---
 fieldprefix: rnd
@@ -43,4 +43,26 @@ fieldSpecs:
 	assert.NotNil(t, tr.FieldPrefix)
 	assert.NotNil(t, tr.FieldSpecs)
 	assert.Len(t, tr.FieldSpecs, 1)
+}
+
+func TestMultipleSpecs(t *testing.T) {
+
+	config := `---
+fieldprefix: rnd
+fieldSpecs:
+  - path: metadata/namespace
+    create: true
+  - path: metadata/label
+    create: true
+`
+
+	resmapFactory := newResMapFactory()
+	pluginHelpers := newPluginHelpers(resmapFactory)
+
+	tr := transformer{}
+	err := tr.Config(pluginHelpers, []byte(config))
+	assert.NoError(t, err)
+	assert.NotNil(t, tr.FieldPrefix)
+	assert.NotNil(t, tr.FieldSpecs)
+	assert.Len(t, tr.FieldSpecs, 2)
 }
