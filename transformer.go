@@ -24,6 +24,7 @@ func (tr *transformer) Config(_ *resmap.PluginHelpers, c []byte) error {
 }
 
 func (tr *transformer) Transform(m resmap.ResMap) error {
+	suffix := rgInstance.suffix()
 	for _, r := range m.Resources() {
 		if r.IsEmpty() {
 			// Don't mutate empty objects?
@@ -32,7 +33,7 @@ func (tr *transformer) Transform(m resmap.ResMap) error {
 
 		filter := Filter{
 			FieldPrefix: tr.FieldPrefix,
-			Suffix:      rgInstance.suffix(),
+			Suffix:      suffix,
 			FieldSpecs:  tr.FieldSpecs,
 		}
 
