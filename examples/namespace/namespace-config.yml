@@ -1,0 +1,21 @@
+apiVersion: v1
+data:
+  some-key: some-value
+kind: ConfigMap
+metadata:
+  name: the-map
+  namespace: unique-ns
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: the-service
+  namespace: unique-ns
+spec:
+  clusterIP: None
+  ports:
+  - name: etcd-server-ssl
+    port: 2380
+  - name: etcd-client-ssl
+    port: 2379
+  publishNotReadyAddresses: true
