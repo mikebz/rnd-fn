@@ -1,6 +1,15 @@
-package main
+# rnd-fn kpt function
 
-const usage = `random kpt function
+The goal of this function is to enable the use case where you'd like to 
+randomize a particular element - maybe a label or a namespace for a kpt package.
+
+An real world example of where this can be handy is creating a dev/test
+environment for a branch or feature and then tearing it down later.  Multiple
+teams in your organization can be creating these environments and the 
+blueprint for the environment can be the same application, but the unique
+namespace allows you to identify which is which and possibly clean them up.
+
+## Usage documentation
 
 Configured using a ConfigMap with the following keys:
 
@@ -13,6 +22,7 @@ Example:
 To add a random number suffix to the namespace 'foobar' so it becomes 'foobar-3143153' 
  to all resources, use this example:
 
+```
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -20,12 +30,15 @@ metadata:
   namespace: foobar
 data:
   fieldprefix: foobar
+```
 
 You can use key 'fieldSpecs' to specify the resource selector you
 want to use. By default, the function will use this field spec:
 
+```
 - path: metadata/namespace
   create: true
+```
 
 This means a 'metadata/namespace' field will be added to all resources
 with namespaceable kinds. Whether a resource is namespaceable is determined
@@ -53,6 +66,7 @@ Example:
 
 To add a namespace 'foobar-23142425' to Deployment resource only:
 
+```
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -63,5 +77,4 @@ data:
     - path: metadata/namespace
       kind: Deployment
       create: true
-
-`
+```
