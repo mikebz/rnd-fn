@@ -171,3 +171,5 @@ spec:
   sessionAffinity: None
   type: NodePort
   ```
+
+  The function sees a field named with a particular patterns like `fieldname-#######` and realizes that the field has been randomized already and doesn't append any more suffixes to it.
