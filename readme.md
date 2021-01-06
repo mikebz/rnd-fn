@@ -78,3 +78,96 @@ data:
       kind: Deployment
       create: true
 ```
+
+## End to end user journey.
+
+Before you start this assumes that you have built and installed the rnd-fn binary using `go install .`
+
+Create a directory in which you will host your config, initialize it with git.
+```
+> mkdir rnd-example
+> cd rnd-example
+> git init .
+```
+
+fetch the selenium package into the directory
+```
+> kpt pkg get https://github.com/kubernetes/examples/staging/selenium .
+fetching package staging/selenium from https://github.com/kubernetes/examples to selenium
+```
+
+create a simple function configuration `fn-config.yml`
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: selenium-hub
+  annotations:
+    config.kubernetes.io/function: |
+      exec:
+        path: rnd-fn
+data:
+  fieldprefix: selenium-hub
+  fieldSpecs:
+    - path: metadata/name
+```
+
+commit the current setup as your baseline in the main branch in git.
+```
+> git add *
+> git commit -am "baseline created"
+```
+
+now we are going to start the creation of a temporary environment.  We will need a temp branch.
+It could be temp1.
+
+```
+> git checkout -b temp1
+Switched to a new branch 'temp1'
+```
+
+Now we can run the function in the current folder and see the function randomize the names
+```
+> kpt fn run . --enable-exec
+```
+
+You can now commit the changed files to the branch and deploy it with `kpt live apply`, ConfigSync or directly with `kubectl apply`
+
+The effect on one of the files is as follows.  `selenium-hub-svc.yml` before: 
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: selenium-hub
+  labels:
+    app: selenium-hub
+spec:
+  ports:
+  - port: 4444
+    targetPort: 4444
+    name: port0
+  selector:
+    app: selenium-hub
+  type: NodePort
+  sessionAffinity: None
+```
+
+after:
+```
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: selenium-hub
+  name: selenium-hub-1623432
+spec:
+  ports:
+  - name: port0
+    port: 4444
+    targetPort: 4444
+  selector:
+    app: selenium-hub
+  sessionAffinity: None
+  type: NodePort
+  ```
