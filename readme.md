@@ -85,53 +85,22 @@ Before you start this assumes that you have built and installed the rnd-fn binar
 
 Create a directory in which you will host your config, initialize it with git.
 ```
-> mkdir rnd-example
-> cd rnd-example
-> git init .
+> mkdir rnd-usecase
+> cd rnd-usecase
 ```
 
 fetch the selenium package into the directory
 ```
-> kpt pkg get https://github.com/kubernetes/examples/staging/selenium .
-fetching package staging/selenium from https://github.com/kubernetes/examples to selenium
-```
-
-create a simple function configuration `fn-config.yml`
-```
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: selenium-hub
-  annotations:
-    config.kubernetes.io/function: |
-      exec:
-        path: rnd-fn
-data:
-  fieldprefix: selenium-hub
-  fieldSpecs:
-    - path: metadata/name
-```
-
-commit the current setup as your baseline in the main branch in git.
-```
-> git add *
-> git commit -am "baseline created"
-```
-
-now we are going to start the creation of a temporary environment.  We will need a temp branch.
-It could be temp1.
-
-```
-> git checkout -b temp1
-Switched to a new branch 'temp1'
+> kpt pkg get https://github.com/mikebz/rnd-example .
+fetching package / from https://github.com/mikebz/rnd-example to rnd-example
 ```
 
 Now we can run the function in the current folder and see the function randomize the names
 ```
-> kpt fn run . --enable-exec
+> kpt fn run --enable-exec rnd-example/selenium --fn-path rnd-example/fn-config 
 ```
 
-You can now commit the changed files to the branch and deploy it with `kpt live apply`, ConfigSync or directly with `kubectl apply`
+You can now deploy it with `kpt live apply`, ConfigSync or directly with `kubectl apply`
 
 The effect on one of the files is as follows.  `selenium-hub-svc.yml` before: 
 
