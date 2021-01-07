@@ -83,13 +83,14 @@ data:
 
 Before you start this assumes that you have built and installed the rnd-fn binary using `go install .`
 
-Create a directory in which you will host your config, initialize it with git.
+Create a directory in which you will host your config, but you can also use an existing repo
+or existing directory.
 ```
 > mkdir rnd-usecase
 > cd rnd-usecase
 ```
 
-fetch the selenium package into the directory
+fetch the sample package into the directory
 ```
 > kpt pkg get https://github.com/mikebz/rnd-example .
 fetching package / from https://github.com/mikebz/rnd-example to rnd-example
