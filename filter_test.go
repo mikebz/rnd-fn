@@ -70,3 +70,67 @@ metadata:
 
 	assert.Equal(t, expected, actual)
 }
+
+func TestRegex(t *testing.T) {
+	input := `apiVersion: example.com/v1
+kind: Foo
+metadata:
+  name: foo-area-51
+---
+apiVersion: example.com/v1
+kind: Bar
+metadata:
+  name: bar-area-51
+`
+	expected := `apiVersion: example.com/v1
+kind: Foo
+metadata:
+  name: foo-area-51-232
+---
+apiVersion: example.com/v1
+kind: Bar
+metadata:
+  name: bar-area-51-232
+`
+	filter := Filter{
+		FieldPrefix: "\\w*-area-\\d*",
+		Suffix:      "232",
+		FieldSpecs:  []types.FieldSpec{{Path: "metadata/name"}},
+	}
+
+	actual := filtertest_test.RunFilter(t, input, filter)
+
+	assert.Equal(t, expected, actual)
+}
+
+func TestRegexRepeatedSet(t *testing.T) {
+	input := `apiVersion: example.com/v1
+kind: Foo
+metadata:
+  name: foo-area-51-112
+---
+apiVersion: example.com/v1
+kind: Bar
+metadata:
+  name: bar-area-51-112
+`
+	expected := `apiVersion: example.com/v1
+kind: Foo
+metadata:
+  name: foo-area-51-112
+---
+apiVersion: example.com/v1
+kind: Bar
+metadata:
+  name: bar-area-51-112
+`
+	filter := Filter{
+		FieldPrefix: "\\w*-area-\\d*",
+		Suffix:      "232",
+		FieldSpecs:  []types.FieldSpec{{Path: "metadata/name"}},
+	}
+
+	actual := filtertest_test.RunFilter(t, input, filter)
+
+	assert.Equal(t, expected, actual)
+}
