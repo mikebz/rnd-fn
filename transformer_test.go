@@ -51,6 +51,7 @@ func runNamespaceTransformer(t *testing.T, config, input string) string {
 	return s
 }
 
+// testing the simple namespace transformation
 func TestSimpleNamespace(t *testing.T) {
 	config := `
 fieldprefix: unique-ns
@@ -93,6 +94,7 @@ spec:
 	}
 }
 
+// testing the simple lable transformation.
 func TestSimpleLabel(t *testing.T) {
 	config := `
 fieldprefix: test
@@ -135,4 +137,39 @@ spec:
 		fmt.Println(expected)
 		t.Fatalf("Actual doesn't equal to expected")
 	}
+}
+
+// testing the transform of a regular expression in a fieldPrefix.
+func TestTransformRegex(t *testing.T) {
+	config := `
+fieldprefix: "unique-\\w+"
+fieldSpecs:
+- path: metadata/name
+- path: metadata/namespace
+`
+
+	input := `apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: unique-cm
+  namespace: unique-ns
+`
+
+	expected := `apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: unique-cm-1231231
+  namespace: unique-ns-1231231
+`
+
+	actual := runNamespaceTransformer(t, config, input)
+	if actual != expected {
+		fmt.Println("Actual:")
+		fmt.Println(actual)
+		fmt.Println("===")
+		fmt.Println("Expected:")
+		fmt.Println(expected)
+		t.Fatalf("Actual doesn't equal to expected")
+	}
+
 }

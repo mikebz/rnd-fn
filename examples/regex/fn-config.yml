@@ -1,4 +1,9 @@
 apiVersion: v1
+data:
+  fieldPrefix: unique-\w+
+  fieldSpecs:
+  - path: metadata/name
+  - path: metadata/namespace
 kind: ConfigMap
 metadata:
   annotations:
@@ -6,7 +11,3 @@ metadata:
       exec:
         path: ../../dist/rnd-fn
   name: my-config
-data:
-  fieldprefix: unique-\w*
-  - path: metadata/name
-  - path: metadata/namespace
