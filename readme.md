@@ -129,15 +129,15 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: selenium-hub
-  name: selenium-hub-1623432
+    app: selenium-hub-8826718
+  name: selenium-hub-8826718
 spec:
   ports:
   - name: port0
     port: 4444
     targetPort: 4444
   selector:
-    app: selenium-hub
+    app: selenium-hub-8826718
   sessionAffinity: None
   type: NodePort
   ```
